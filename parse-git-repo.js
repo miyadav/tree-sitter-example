@@ -4,7 +4,7 @@ const path = require('path');
 const Parser = require('tree-sitter');
 const Go = require('tree-sitter-go');
 
-const gitRepoUrl = 'https://github.com/user/repository.git'; // Replace with your Git repo URL
+const gitRepoUrl = 'https://github.com/openshift/cluster-api-actuator-pkg'; // Replace with your Git repo URL
 const repoDir = './cloned-repo'; // Local directory to clone the repo
 
 // Step 1: Clone or update the repository

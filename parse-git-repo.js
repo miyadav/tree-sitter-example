@@ -4,20 +4,31 @@ const path = require('path');
 const Parser = require('tree-sitter');
 const Go = require('tree-sitter-go');
 
-const gitRepoUrl = 'https://github.com/openshift/cluster-api-actuator-pkg'; // Replace with your Git repo URL
+const gitRepoUrl = 'https://github.com/user/repository.git'; // Replace with your Git repo URL
 const repoDir = './cloned-repo'; // Local directory to clone the repo
 
-// Step 1: Clone the repository
-async function cloneRepo() {
+// Step 1: Clone or update the repository
+async function cloneOrUpdateRepo() {
   const git = simpleGit();
-  
-  try {
+
+  if (fs.existsSync(repoDir)) {
+    console.log('Repository already exists. Pulling the latest changes...');
+    try {
+      await git.cwd(repoDir).pull();
+      console.log('Repository updated successfully.');
+    } catch (error) {
+      console.error('Failed to pull the latest changes:', error);
+      process.exit(1);
+    }
+  } else {
     console.log('Cloning repository...');
-    await git.clone(gitRepoUrl, repoDir);
-    console.log('Repository cloned successfully.');
-  } catch (error) {
-    console.error('Failed to clone repository:', error);
-    process.exit(1);
+    try {
+      await git.clone(gitRepoUrl, repoDir);
+      console.log('Repository cloned successfully.');
+    } catch (error) {
+      console.error('Failed to clone repository:', error);
+      process.exit(1);
+    }
   }
 }
 
@@ -44,7 +55,7 @@ function parseGoFiles() {
 
 // Main function
 async function main() {
-  await cloneRepo();
+  await cloneOrUpdateRepo();
   parseGoFiles();
 }
 
